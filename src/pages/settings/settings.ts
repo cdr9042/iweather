@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { HomePage } from '../home/home';
+import { WeatherProvider } from '../../providers/weather/weather';
 /**
  * Generated class for the SettingsPage page.
  *
@@ -14,22 +15,24 @@ import { HomePage } from '../home/home';
   selector: 'page-settings',
   templateUrl: 'settings.html',
 })
-export class SettingsPage {
-	city:string;
+export class SettingsPage{
+	public city;
+  searchStr:string;
 	state:string;
-
+  public results;
+  public searchStr;
   constructor(public navCtrl: NavController, 
   	public navParams: NavParams,
-  	private storage:Storage) {
-  		this.storage.get('location').then((val)=> {
+  	private storage:Storage,
+    private weatherProvider:WeatherProvider) {
+  		this.storage.get('city').then((val)=> {
   			if (val != null){
-  				let location = JSON.parse(val);
-  				this.city = location.city;
-  				this.state = location.state;
+          this.searchStr=JSON.parse(val);
   			} 
   			else {
-  				this.city = 'Hanoi';
-  				this.state = 'VN';
+          this.city = [];
+          this.zmw='00000.96.48819';
+  				this.searchStr = 'Hanoi';
   			}
   		});
   }
@@ -37,11 +40,25 @@ export class SettingsPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad SettingsPage');
   }
+  getQuery() {
+    this.weatherProvider.searchCities(this.searchStr)
+      .subscribe(res => {
+        this.results = res.RESULTS;
+      });
+  }
+  chooseCity(city) {
+    // Clear list
+    this.results = [];
+    this.city = city;
+    this.searchStr = city.name;
+  }
   saveForm(){
   	let location = {
   		city: this.city,
   		state: this.state
   	}
+    this.storage.set('city',JSON.stringify(this.city.name));
+    this.storage.set('zmw',JSON.stringify(this.city.zmw));
   	this.storage.set('location',JSON.stringify(location));
   	this.navCtrl.push(HomePage);
   }

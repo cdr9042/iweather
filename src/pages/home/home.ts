@@ -8,11 +8,11 @@ import { Storage } from '@ionic/storage';
 })
 export class HomePage {
   weather:any;
+  public zmw;
   location:{
     city:string,
     state:string
   }
-
   constructor(
   	public navCtrl: NavController, 
   	private weatherProvider:WeatherProvider,
@@ -20,18 +20,21 @@ export class HomePage {
 
   }
   ionViewWillEnter(){
-  	this.storage.get('location').then((val) => {
+  	this.storage.get('zmw').then((val) => {
   		if (val != null){
-  			this.location = JSON.parse(val);
+  			this.zmw = JSON.parse(val);
+  			/*this.location = JSON.parse(val);*/
   		}
   		else {
-  			this.location = {
+  			this.zmw = '00000.96.48819';
+  			/*this.location = {
 	  			city: 'Hanoi',
   				state: 'VN'
-  			}
+  			}*/
   		}
 
-  		this.weatherProvider.getWeather(this.location.city,this.location.state).subscribe(weather => {
+  		this.weatherProvider.getWeather(this.zmw)
+  		.subscribe(weather => {
   		this.weather = weather.current_observation;
   		});
   	});

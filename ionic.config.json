@@ -2,5 +2,11 @@
   "name": "iweather",
   "app_id": "cda5380f",
   "type": "ionic-angular",
+  "proxies": [
+    {
+      "path": "/search",
+      "proxyUrl": "http://autocomplete.wunderground.com"
+    }
+  ],
   "integrations": {}
 }

@@ -19,18 +19,26 @@
 			<ion-col width-100>
 				<ion-list>
 					<form (ngSubmit)="saveForm()">
+						<ion-list>
 						<ion-item>
 							<ion-label fixed>
 								City
 							</ion-label>
-							<ion-input [(ngModel)]="city" name="city" type="text" ></ion-input>
+							<ion-input (keyup)="getQuery()" [(ngModel)]="searchStr" name="city_input" type="text" ></ion-input>
 						</ion-item>
-						<ion-item>
+						</ion-list>
+						<ion-list>
+		          <ion-item *ngFor="let result of results">
+		            <span (click)="chooseCity(result)">{{result.name}}
+		            </span>
+		          </ion-item>
+		        </ion-list>
+						<!-- <ion-item>
 							<ion-label fixed>
 								State
 							</ion-label>
 							<ion-input [(ngModel)]="state" name="state" type="text" ></ion-input>
-						</ion-item>
+						</ion-item> -->
 						<button ion-button type="submit" block>Save changes</button>
 					</form>
 				</ion-list>
